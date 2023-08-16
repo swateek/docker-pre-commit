@@ -6,47 +6,9 @@ on:
       - "*"
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
-  # pull_request:
-  #   branches:
-  #     - "*"
-# jobs:
-#   build:
-#     name: Build & Push Docker Image
-#     runs-on: ubuntu-latest
-#     env:
-#       IMG_NAME: ${{ github.repository }}
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v3
 
-#       - name: Debug
-#         run: |
-#           echo "github.ref -> {{ github.ref }}"
-
-#       - name: Docker metadata
-#         id: metadata
-#         uses: docker/metadata-action@v3
-#         with:
-#           images: ${{ env.IMG_NAME }}
-#           tags: |
-#             type=semver,pattern={{version}}
-#             type=semver,pattern={{major}}.{{minor}}
-#             type=raw,value={{sha}},enable=${{ github.ref_type != 'tag' }}
-
-#       - name: Log in to Docker Hub
-#         uses: docker/login-action@v2
-#         if: ${{ github.ref_type == 'tag' }}
-#         with:
-#           username: ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}
-#           password: ${{ secrets.SWATEEKJ_DOCKER_HUB_PASSWORD }}
-
-#       - name: Build and push Docker image
-#         uses: docker/build-push-action@v4
-#         with:
-#           context: .
-#           push: ${{ github.event.base_ref =='refs/heads/main' && github.ref_type == 'tag' && !startsWith(github.ref, 'refs/tags/v0.')}}
-#           tags: ${{ steps.metadata.outputs.tags }}
-#           labels: ${{ steps.metadata.outputs.labels }}
+env:
+  DOCKER_HUB_REPO_NAME: verify-pre-commit
 
 jobs:
   push_to_registry:
@@ -66,13 +28,14 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: swateekj/verify-pre-commit
+          images: ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ DOCKER_HUB_REPO_NAME }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
+        if: ${{ github.ref_type == 'tag' }}
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}, ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ DOCKER_HUB_REPO_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
