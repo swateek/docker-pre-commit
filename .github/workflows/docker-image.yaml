@@ -28,7 +28,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ DOCKER_HUB_REPO_NAME }}
+          images: ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/$DOCKER_HUB_REPO_NAME
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
