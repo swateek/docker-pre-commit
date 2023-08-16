@@ -37,5 +37,5 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}, ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ DOCKER_HUB_REPO_NAME }}:latest
+          tags: ${{ steps.meta.outputs.tags }}, ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/$DOCKER_HUB_REPO_NAME:latest
           labels: ${{ steps.meta.outputs.labels }}
