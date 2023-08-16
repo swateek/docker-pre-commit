@@ -12,4 +12,3 @@ ARG BUILD_VERSION
 ENV BUILD_VERSION=${BUILD_VERSION}
 COPY --from=compile-image /usr/bin/ /usr/bin/
 COPY --from=compile-image /usr/lib/ /usr/lib/
-ENTRYPOINT [ "ls" ]
