@@ -2,3 +2,4 @@
 !.gitignore
 !.dockerignore
 !.pre-commit-config.yaml
+!.github
