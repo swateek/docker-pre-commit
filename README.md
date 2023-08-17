@@ -24,3 +24,23 @@ docker run --name docker-pre-commit --rm -ti docker-pre-commit bash
 apt-cache policy pre-commit
 
 ```
+
+## Usage
+
+1. On GitLab CI
+
+```yaml
+job-validate-precommit-hook:
+  stage: validate
+  image: swateekj/verify-pre-commit:latest
+  script: |
+    set -x
+    status=0
+    pre-commit run --all-files || status=$?
+    if [[ $status -ne 0 ]]; then
+      # cat /root/.cache/pre-commit/pre-commit.log
+      exit 1 # fail the job
+    fi
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+```
