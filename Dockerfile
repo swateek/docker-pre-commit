@@ -18,6 +18,7 @@ ARG MAJOR_PYTHON_VERSION
 ENV BUILD_VERSION=${BUILD_VERSION}
 ENV MAJOR_PYTHON_VERSION=${MAJOR_PYTHON_VERSION}
 COPY --from=compile-image /usr/bin/git /usr/bin/git
+COPY --from=compile-image /usr/lib /usr/lib
 COPY --from=compile-image /usr/local/bin /usr/local/bin
 COPY --from=compile-image /usr/local/lib/python${MAJOR_PYTHON_VERSION}/site-packages /usr/local/lib/python${MAJOR_PYTHON_VERSION}/site-packages
 # Make sure scripts via pip are usable
