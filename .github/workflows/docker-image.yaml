@@ -2,8 +2,8 @@ name: ci
 
 on:
   push:
-    branches:
-      - "*"
+    # branches:
+    #   - "*"
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
 
@@ -37,6 +37,6 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          # tags: ${{ steps.meta.outputs.tags }}, ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ env.DOCKER_HUB_REPO_NAME }}:latest
-          tags: ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ env.DOCKER_HUB_REPO_NAME }}:dev
+          tags: ${{ steps.meta.outputs.tags }}, ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ env.DOCKER_HUB_REPO_NAME }}:latest
+          # tags: ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ env.DOCKER_HUB_REPO_NAME }}:dev
           labels: ${{ steps.meta.outputs.labels }}
