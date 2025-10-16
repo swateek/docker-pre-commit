@@ -8,7 +8,7 @@ ARG BUILD_VERSION
 ARG MAJOR_PYTHON_VERSION
 ARG PRE_COMMIT_VERSION
 RUN apt-get update
-RUN apt-get install -y git
+RUN apt-get install -y git libatomic1 libstdc++6
 RUN pip install --upgrade pip pre-commit==${PRE_COMMIT_VERSION}
 
 
