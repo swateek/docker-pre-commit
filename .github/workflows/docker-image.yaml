@@ -2,10 +2,10 @@ name: ci
 
 on:
   push:
-    # branches:
-    #   - "*"
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+    branches:
+      - "*"
+    # tags:
+    #   - "v[0-9]+.[0-9]+.[0-9]+"
 
 env:
   DOCKER_HUB_REPO_NAME: verify-pre-commit
