@@ -1,7 +1,12 @@
 name: ci
 
+# This workflow builds and pushes the Docker image to Docker Hub.
+# By default, it runs only when a version tag (e.g., v1.0.0) is pushed to the repository.
+
 on:
   push:
+    # --- PRIVATE BRANCH BUILDS ---
+    # To enable building and pushing from any private branch, uncomment the lines below:
     # branches:
     #   - "*"
     tags:
@@ -12,31 +17,38 @@ env:
 
 jobs:
   push_to_registry:
-    name: Push Docker image to Docker Hub
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
     steps:
-      - name: Check out the repo
+      - name: Fetch repository source code
         uses: actions/checkout@v3
 
-      - name: Log in to Docker Hub
+      - name: Authenticate with Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}
           password: ${{ secrets.SWATEEKJ_DOCKER_HUB_PASSWORD }}
 
-      - name: Extract metadata (tags, labels) for Docker
+      - name: Generate Docker image metadata (tags and labels)
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ env.DOCKER_HUB_REPO_NAME }}
+          tags: |
+            # Tag with the specific version (e.g., 1.0.0)
+            type=semver,pattern={{version}}
+            # Tag as 'latest' only for official tag releases
+            type=raw,value=latest,enable=${{ github.ref_type == 'tag' }}
+            # --- OPTIONAL: BRANCH TAGS ---
+            # Uncomment the lines below to enable 'dev' and branch-specific tags:
+            # type=raw,value=dev,enable=${{ github.ref_type == 'branch' }}
+            # type=ref,event=branch,enable=${{ github.ref_type == 'branch' }}
 
-      - name: Build and push Docker image
+      - name: Execute Docker build and push to registry
         uses: docker/build-push-action@v4
-        # if: ${{ github.ref_type == 'tag' }}
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}, ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ env.DOCKER_HUB_REPO_NAME }}:latest
-          # tags: ${{ secrets.SWATEEKJ_DOCKER_HUB_USERNAME }}/${{ env.DOCKER_HUB_REPO_NAME }}:dev
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
