@@ -3,3 +3,4 @@
 !.dockerignore
 !.pre-commit-config.yaml
 !.github
+!.agent
